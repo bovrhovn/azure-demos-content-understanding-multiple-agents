@@ -14,5 +14,7 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
-app.Run();// Expose Program class for WebApplicationFactory in test projects
+app.Run();
+
+// Expose Program class for WebApplicationFactory in test projects
 public partial class Program { }

@@ -1,6 +1,193 @@
 ﻿@page
 @model IndexModel
 @{
-    ViewData["Title"] = "Home page";
+    ViewData["Title"] = "Home";
 }
+
+<!-- Hero -->
+<section class="docai-hero">
+    <div class="container-xl">
+        <div class="row align-items-center">
+            <div class="col-lg-7">
+                <div class="docai-hero-badge">
+                    <i class="fa-solid fa-circle-check"></i> Azure AI Foundry Demo
+                </div>
+                <h1>Multi-Agent Document<br/>Intelligence</h1>
+                <p class="lead mb-4">
+                    Extract, validate, and reason over document content using multiple specialized
+                    AI agents built on Azure AI Foundry and Model Context Protocol (MCP).
+                </p>
+                <div class="d-flex flex-wrap gap-2">
+                    <a href="https://learn.microsoft.com/azure/ai-foundry/what-is-ai-foundry"
+                       target="_blank" rel="noopener noreferrer" class="btn btn-docai-primary">
+                        <i class="fa-solid fa-book-open me-2"></i>Read the Docs
+                    </a>
+                    <a href="https://github.com/bovrhovn/azure-demos-content-understanding-multiple-agents"
+                       target="_blank" rel="noopener noreferrer" class="btn btn-docai-outline">
+                        <i class="fa-brands fa-github me-2"></i>View on GitHub
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-5 d-none d-lg-flex justify-content-center mt-4 mt-lg-0">
+                <div class="text-center" style="opacity:.18; font-size: 10rem; line-height:1;">
+                    <i class="fa-solid fa-brain"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Stats -->
+<section class="py-5 bg-docai-surface">
+    <div class="container-xl">
+        <div class="row g-3">
+            <div class="col-6 col-md-3">
+                <div class="docai-stat">
+                    <div class="docai-stat-value">3</div>
+                    <div class="docai-stat-label">AI Agents</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="docai-stat">
+                    <div class="docai-stat-value">MCP</div>
+                    <div class="docai-stat-label">Protocol</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="docai-stat">
+                    <div class="docai-stat-value">.NET</div>
+                    <div class="docai-stat-label">10</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="docai-stat">
+                    <div class="docai-stat-value">100%</div>
+                    <div class="docai-stat-label">Azure Native</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Pipeline Steps -->
+<section class="py-5">
+    <div class="container-xl">
+        <div class="row g-5">
+            <div class="col-lg-5">
+                <h2 class="docai-section-title">How the Pipeline Works</h2>
+                <p class="docai-section-subtitle">
+                    A multi-agent orchestrator coordinates specialized agents that each handle one stage of document processing.
+                </p>
+
+                <div class="docai-step">
+                    <div class="docai-step-number">1</div>
+                    <div class="docai-step-content">
+                        <h6><i class="fa-solid fa-file-pdf me-1 text-docai"></i>Document Ingestion</h6>
+                        <p>PDFs and images are sent to Azure AI Document Intelligence for layout extraction (tables, key-value pairs, text).</p>
+                    </div>
+                </div>
+                <div class="docai-step">
+                    <div class="docai-step-number">2</div>
+                    <div class="docai-step-content">
+                        <h6><i class="fa-solid fa-magnifying-glass-chart me-1 text-docai"></i>Structured Analysis</h6>
+                        <p>The Analyzer Agent uses an Azure AI chat model to extract persons, emails, and tabular data from the raw text.</p>
+                    </div>
+                </div>
+                <div class="docai-step">
+                    <div class="docai-step-number">3</div>
+                    <div class="docai-step-content">
+                        <h6><i class="fa-solid fa-shield-halved me-1 text-docai"></i>MCP Validation</h6>
+                        <p>The Validator Agent applies business rules via the Model Context Protocol (MCP) service to ensure data quality.</p>
+                    </div>
+                </div>
+                <div class="docai-step">
+                    <div class="docai-step-number">4</div>
+                    <div class="docai-step-content">
+                        <h6><i class="fa-solid fa-circle-check me-1 text-docai"></i>Results Surfaced</h6>
+                        <p>The orchestrator collects all results and presents them to the user with full traceability.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-7">
+                <h2 class="docai-section-title">Key Components</h2>
+                <p class="docai-section-subtitle">Explore the building blocks of this multi-agent solution.</p>
+                <div class="row g-3">
+                    <div class="col-sm-6">
+                        <div class="docai-card p-4">
+                            <div class="docai-card-icon bg-blue">
+                                <i class="fa-solid fa-sitemap"></i>
+                            </div>
+                            <h6 class="fw-semibold mb-1">Orchestrator Agent</h6>
+                            <p class="text-muted small mb-0">Coordinates the multi-step document processing pipeline using Azure AI Agent Service.</p>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="docai-card p-4">
+                            <div class="docai-card-icon bg-teal">
+                                <i class="fa-solid fa-file-lines"></i>
+                            </div>
+                            <h6 class="fw-semibold mb-1">Document Intelligence</h6>
+                            <p class="text-muted small mb-0">Azure AI Document Intelligence extracts layout, tables, and key-value pairs from documents.</p>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="docai-card p-4">
+                            <div class="docai-card-icon bg-purple">
+                                <i class="fa-solid fa-plug"></i>
+                            </div>
+                            <h6 class="fw-semibold mb-1">MCP Validator</h6>
+                            <p class="text-muted small mb-0">Standalone validation service exposing business rules via the Model Context Protocol.</p>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="docai-card p-4">
+                            <div class="docai-card-icon bg-orange">
+                                <i class="fa-brands fa-docker"></i>
+                            </div>
+                            <h6 class="fw-semibold mb-1">Container Ready</h6>
+                            <p class="text-muted small mb-0">All services ship as Docker images deployable to Azure Container Apps or AKS.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Tech Stack -->
+<section class="py-5 bg-docai-surface">
+    <div class="container-xl">
+        <div class="text-center mb-4">
+            <h2 class="docai-section-title">Technology Stack</h2>
+            <p class="docai-section-subtitle">Built with modern Azure services and open-source frameworks.</p>
+        </div>
+        <div class="d-flex flex-wrap justify-content-center gap-2">
+            <a href="https://learn.microsoft.com/azure/ai-foundry/" target="_blank" rel="noopener noreferrer" class="docai-tech-badge text-decoration-none">
+                <i class="fa-solid fa-cloud text-docai"></i> Azure AI Foundry
+            </a>
+            <a href="https://learn.microsoft.com/azure/ai-services/document-intelligence/" target="_blank" rel="noopener noreferrer" class="docai-tech-badge text-decoration-none">
+                <i class="fa-solid fa-file-contract text-docai"></i> Document Intelligence
+            </a>
+            <a href="https://modelcontextprotocol.io/" target="_blank" rel="noopener noreferrer" class="docai-tech-badge text-decoration-none">
+                <i class="fa-solid fa-plug text-docai"></i> Model Context Protocol
+            </a>
+            <a href="https://dotnet.microsoft.com/download/dotnet/10.0" target="_blank" rel="noopener noreferrer" class="docai-tech-badge text-decoration-none">
+                <i class="fa-brands fa-microsoft text-docai"></i> .NET 10
+            </a>
+            <a href="https://getbootstrap.com/" target="_blank" rel="noopener noreferrer" class="docai-tech-badge text-decoration-none">
+                <i class="fa-brands fa-bootstrap" style="color:#7952b3;"></i> Bootstrap 5
+            </a>
+            <a href="https://fontawesome.com/" target="_blank" rel="noopener noreferrer" class="docai-tech-badge text-decoration-none">
+                <i class="fa-solid fa-flag text-docai"></i> Font Awesome 6
+            </a>
+            <a href="https://playwright.dev/dotnet/" target="_blank" rel="noopener noreferrer" class="docai-tech-badge text-decoration-none">
+                <i class="fa-solid fa-vial text-docai"></i> Playwright
+            </a>
+            <a href="https://www.docker.com/" target="_blank" rel="noopener noreferrer" class="docai-tech-badge text-decoration-none">
+                <i class="fa-brands fa-docker" style="color:#2496ed;"></i> Docker
+            </a>
+        </div>
+    </div>
+</section>
 

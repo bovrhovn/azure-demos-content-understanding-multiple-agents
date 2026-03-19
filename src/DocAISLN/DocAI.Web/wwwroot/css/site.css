@@ -1,78 +1,316 @@
+/* =========================================================
+   DocAI – Custom Styles
+   Base: Bootstrap 5 | Icons: Font Awesome 6
+   ========================================================= */
+
+/* ---------- CSS Custom Properties ---------- */
+:root {
+    --docai-primary: #0078d4;
+    --docai-primary-dark: #005a9e;
+    --docai-secondary: #50e6ff;
+    --docai-surface: #f8f9fc;
+    --docai-card-border: rgba(0, 120, 212, 0.12);
+    --docai-gradient: linear-gradient(135deg, #0078d4 0%, #004e8c 100%);
+    --docai-gradient-accent: linear-gradient(135deg, #50e6ff 0%, #0078d4 100%);
+    --docai-shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.06);
+    --docai-shadow-md: 0 4px 20px rgba(0, 0, 0, 0.10);
+    --docai-shadow-lg: 0 8px 40px rgba(0, 0, 0, 0.15);
+    --docai-radius: 0.75rem;
+    --docai-radius-lg: 1.25rem;
+}
+
+/* ---------- Base ---------- */
 html {
-  font-size: 14px;
+    font-size: 15px;
+    scroll-behavior: smooth;
 }
 
 @media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
-}
-
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
-}
-
-html {
-  position: relative;
-  min-height: 100%;
+    html {
+        font-size: 16px;
+    }
 }
 
 body {
-  margin-bottom: 60px;
+    background-color: var(--docai-surface);
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    color: #1a1a2e;
 }
 
-.form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
-  color: var(--bs-secondary-color);
-  text-align: end;
+/* ---------- Navbar ---------- */
+.docai-navbar {
+    background: var(--docai-gradient);
+    padding: 0.75rem 0;
 }
 
-.form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
-  text-align: start;
-}/* Please see documentation at https://learn.microsoft.com/aspnet/core/client-side/bundling-and-minification
-for details on configuring this project to bundle and minify static web assets. */
-
-a.navbar-brand {
-  white-space: normal;
-  text-align: center;
-  word-break: break-all;
+.docai-navbar .navbar-brand {
+    font-size: 1.25rem;
+    letter-spacing: -0.01em;
+    color: #fff !important;
 }
 
-a {
-  color: #0077cc;
+.docai-navbar .nav-link {
+    color: rgba(255, 255, 255, 0.85) !important;
+    font-size: 0.9rem;
+    font-weight: 500;
+    padding: 0.4rem 0.75rem !important;
+    border-radius: 0.4rem;
+    transition: background 0.15s, color 0.15s;
 }
 
-.btn-primary {
-  color: #fff;
-  background-color: #1b6ec2;
-  border-color: #1861ac;
+.docai-navbar .nav-link:hover,
+.docai-navbar .nav-link.active {
+    background: rgba(255, 255, 255, 0.15);
+    color: #fff !important;
 }
 
-.nav-pills .nav-link.active, .nav-pills .show > .nav-link {
-  color: #fff;
-  background-color: #1b6ec2;
-  border-color: #1861ac;
+/* ---------- Hero Section ---------- */
+.docai-hero {
+    background: var(--docai-gradient);
+    color: #fff;
+    padding: 4rem 0 5rem;
+    position: relative;
+    overflow: hidden;
 }
 
-.border-top {
-  border-top: 1px solid #e5e5e5;
-}
-.border-bottom {
-  border-bottom: 1px solid #e5e5e5;
-}
-
-.box-shadow {
-  box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
-}
-
-button.accept-policy {
-  font-size: 1rem;
-  line-height: inherit;
+.docai-hero::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    right: 0;
+    height: 60px;
+    background: var(--docai-surface);
+    clip-path: ellipse(55% 100% at 50% 100%);
 }
 
-.footer {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  white-space: nowrap;
-  line-height: 60px;
+.docai-hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 2rem;
+    padding: 0.3rem 0.9rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin-bottom: 1.25rem;
 }
+
+.docai-hero h1 {
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 1rem;
+}
+
+.docai-hero .lead {
+    font-size: 1.05rem;
+    color: rgba(255, 255, 255, 0.85);
+    max-width: 600px;
+}
+
+/* ---------- Cards ---------- */
+.docai-card {
+    background: #fff;
+    border: 1px solid var(--docai-card-border);
+    border-radius: var(--docai-radius);
+    box-shadow: var(--docai-shadow-sm);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    height: 100%;
+}
+
+.docai-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--docai-shadow-md);
+}
+
+.docai-card-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 0.6rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
+    flex-shrink: 0;
+}
+
+.docai-card-icon.bg-blue   { background: rgba(0, 120, 212, 0.12); color: var(--docai-primary); }
+.docai-card-icon.bg-teal   { background: rgba(0, 178, 148, 0.12); color: #00b294; }
+.docai-card-icon.bg-purple { background: rgba(135, 100, 184, 0.12); color: #8764b8; }
+.docai-card-icon.bg-orange { background: rgba(218, 59, 1, 0.12); color: #da3b01; }
+.docai-card-icon.bg-cyan   { background: rgba(0, 188, 242, 0.12); color: #00bcf2; }
+.docai-card-icon.bg-green  { background: rgba(16, 124, 16, 0.12); color: #107c10; }
+
+/* ---------- Section Headings ---------- */
+.docai-section-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1a1a2e;
+    margin-bottom: 0.35rem;
+}
+
+.docai-section-subtitle {
+    color: #6c757d;
+    font-size: 0.95rem;
+    margin-bottom: 2rem;
+}
+
+/* ---------- Pipeline Steps ---------- */
+.docai-step {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1.25rem;
+    background: #fff;
+    border-radius: var(--docai-radius);
+    border: 1px solid var(--docai-card-border);
+    margin-bottom: 0.75rem;
+    transition: border-color 0.2s;
+}
+
+.docai-step:hover {
+    border-color: var(--docai-primary);
+}
+
+.docai-step-number {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--docai-gradient);
+    color: #fff;
+    font-weight: 700;
+    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.docai-step-content h6 {
+    margin-bottom: 0.2rem;
+    font-weight: 600;
+}
+
+.docai-step-content p {
+    margin: 0;
+    font-size: 0.875rem;
+    color: #6c757d;
+}
+
+/* ---------- Tech Badge ---------- */
+.docai-tech-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: #fff;
+    border: 1px solid var(--docai-card-border);
+    border-radius: 2rem;
+    padding: 0.35rem 0.8rem;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: #495057;
+    box-shadow: var(--docai-shadow-sm);
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.docai-tech-badge:hover {
+    border-color: var(--docai-primary);
+    box-shadow: var(--docai-shadow-md);
+}
+
+/* ---------- Buttons ---------- */
+.btn-docai-primary {
+    background: var(--docai-gradient);
+    color: #fff;
+    border: none;
+    border-radius: 0.5rem;
+    padding: 0.6rem 1.4rem;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: opacity 0.15s, box-shadow 0.15s;
+}
+
+.btn-docai-primary:hover {
+    color: #fff;
+    opacity: 0.92;
+    box-shadow: var(--docai-shadow-md);
+}
+
+.btn-docai-outline {
+    background: transparent;
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    border-radius: 0.5rem;
+    padding: 0.6rem 1.4rem;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: background 0.15s, border-color 0.15s;
+}
+
+.btn-docai-outline:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: #fff;
+    color: #fff;
+}
+
+/* ---------- Stat Cards ---------- */
+.docai-stat {
+    text-align: center;
+    padding: 1.5rem;
+    background: #fff;
+    border-radius: var(--docai-radius);
+    border: 1px solid var(--docai-card-border);
+    box-shadow: var(--docai-shadow-sm);
+}
+
+.docai-stat-value {
+    font-size: 2rem;
+    font-weight: 800;
+    background: var(--docai-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1;
+    margin-bottom: 0.25rem;
+}
+
+.docai-stat-label {
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: #6c757d;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* ---------- Footer ---------- */
+.docai-footer {
+    background: #fff;
+    border-top: 1px solid var(--docai-card-border);
+    font-size: 0.875rem;
+}
+
+/* ---------- Focus & Accessibility ---------- */
+.btn:focus-visible,
+.nav-link:focus-visible,
+a:focus-visible {
+    outline: 2px solid var(--docai-primary);
+    outline-offset: 2px;
+}
+
+/* ---------- Utility ---------- */
+.text-docai {
+    color: var(--docai-primary) !important;
+}
+
+.bg-docai-surface {
+    background-color: var(--docai-surface) !important;
+}
+

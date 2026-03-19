@@ -1,0 +1,26 @@
+﻿@page
+@model DocAI.Web.Pages.Docs.UploadAndProcessPageModel
+
+@{
+    ViewData["Title"] = "Upload and Process";
+}
+
+<h3></h3>
+
+<form enctype="multipart/form-data" method="post">
+    <dl>
+        <dt>
+            <label asp-for="FormFile"></label>
+        </dt>
+        <dd>
+            <input asp-for="FormFile" type="file" />
+            <span asp-validation-for="FormFile"></span>
+        </dd>
+    </dl>
+    <input class="btn" type="submit" value="Upload and process file " />
+</form>
+
+@if (TempData["Data"] != null)
+{
+    <p>Processed data from PDF</p>    
+}

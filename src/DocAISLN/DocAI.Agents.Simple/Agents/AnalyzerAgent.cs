@@ -1,5 +1,5 @@
 using System.Text.Json;
-using DocAI.Console.Models;
+using DocAI.Models;
 using Spectre.Console;
 
 namespace DocAI.Console.Agents;

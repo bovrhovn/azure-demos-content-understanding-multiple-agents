@@ -3,6 +3,7 @@ using Azure.Core;
 using Azure.Core.Pipeline;
 using Azure.Identity;
 using DocAI.Console.Agents;
+using DocAI.Services;
 using Spectre.Console;
 
 namespace DocAI.Console.Helpers;

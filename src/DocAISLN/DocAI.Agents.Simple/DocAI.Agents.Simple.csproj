@@ -16,4 +16,8 @@
         <PackageReference Include="UglyToad.PdfPig" Version="1.7.0-custom-5"/>
         <PackageReference Include="Spectre.Console" Version="0.54.0"/>
     </ItemGroup>
+    <ItemGroup>
+      <ProjectReference Include="..\DocAI.Models\DocAI.Models.csproj" />
+      <ProjectReference Include="..\DocAI.Services\DocAI.Services.csproj" />
+    </ItemGroup>
 </Project>

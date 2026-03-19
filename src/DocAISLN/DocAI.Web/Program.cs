@@ -1,5 +1,13 @@
+using DocAI.Services;
+
 var builder = WebApplication.CreateBuilder(args);
-builder.WebHost.ConfigureKestrel(settings => settings.AddServerHeader = false);
+builder.WebHost.ConfigureKestrel(settings =>
+{
+    settings.AddServerHeader = false;
+    settings.Limits.MaxRequestBodySize = 6L * 1024 * 1024 * 1024; // 6 GB
+    settings.Limits.KeepAliveTimeout = TimeSpan.FromMinutes(10);
+    settings.Limits.RequestHeadersTimeout = TimeSpan.FromMinutes(10);
+});
 builder.Services.AddTransient<ILogger>(p =>
 {
     var loggerFactory = p.GetRequiredService<ILoggerFactory>();
@@ -7,12 +15,13 @@ builder.Services.AddTransient<ILogger>(p =>
 });
 builder.Services.AddRazorPages().AddRazorPagesOptions(options =>
     options.Conventions.AddPageRoute("/Info/Index", ""));
-
+builder.Services.AddMemoryCache();
+builder.Services.AddSingleton<PdfService>();
 var app = builder.Build();
 
 if (!app.Environment.IsDevelopment())
 {
-    app.UseExceptionHandler("/Error");
+    app.UseExceptionHandler("/Info/Error");
 }
 
 app.UseRouting();
@@ -22,4 +31,7 @@ app.MapRazorPages();
 app.Run();
 
 // Expose Program class for WebApplicationFactory in test projects
-public partial class Program { }
+namespace DocAI.Web
+{
+    public partial class Program { }
+}

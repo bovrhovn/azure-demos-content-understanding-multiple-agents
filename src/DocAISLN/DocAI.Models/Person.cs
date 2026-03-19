@@ -1,4 +1,4 @@
-namespace DocAI.Console.Models;
+namespace DocAI.Models;
 
 public class Person
 {

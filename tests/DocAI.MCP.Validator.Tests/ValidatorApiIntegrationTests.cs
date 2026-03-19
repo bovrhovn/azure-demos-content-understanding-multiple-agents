@@ -6,19 +6,13 @@ namespace DocAI.MCP.Validator.Tests;
 /// Integration tests for the DocAI.MCP.Validator API service.
 /// Uses WebApplicationFactory to spin up an in-memory test server.
 /// </summary>
-public class ValidatorApiIntegrationTests : IClassFixture<WebApplicationFactory<Program>>
+public class ValidatorApiIntegrationTests(WebApplicationFactory<Program> factory)
+    : IClassFixture<WebApplicationFactory<Program>>
 {
-    private readonly WebApplicationFactory<Program> _factory;
-
-    public ValidatorApiIntegrationTests(WebApplicationFactory<Program> factory)
-    {
-        _factory = factory;
-    }
-
     [Fact]
     public async Task Application_StartsAndResponds()
     {
-        var client = _factory.CreateClient();
+        var client = factory.CreateClient();
 
         // A GET to any non-existent path will still return a response (not throw a connection error),
         // which proves the application started successfully.
@@ -35,12 +29,12 @@ public class ValidatorApiIntegrationTests : IClassFixture<WebApplicationFactory<
     public async Task OpenApiEndpoint_IsAvailableInDevelopment()
     {
         // Configure factory to use Development environment so MapOpenApi() is registered.
-        var factory = _factory.WithWebHostBuilder(builder =>
+        var factory1 = factory.WithWebHostBuilder(builder =>
         {
             builder.UseEnvironment("Development");
         });
 
-        var client = factory.CreateClient();
+        var client = factory1.CreateClient();
 
         var response = await client.GetAsync("/openapi/v1.json");
 
@@ -52,12 +46,12 @@ public class ValidatorApiIntegrationTests : IClassFixture<WebApplicationFactory<
     [Fact]
     public async Task OpenApiEndpoint_IsNotAvailableInProduction()
     {
-        var factory = _factory.WithWebHostBuilder(builder =>
+        var factory1 = factory.WithWebHostBuilder(builder =>
         {
             builder.UseEnvironment("Production");
         });
 
-        var client = factory.CreateClient();
+        var client = factory1.CreateClient();
 
         var response = await client.GetAsync("/openapi/v1.json");
 
@@ -67,7 +61,7 @@ public class ValidatorApiIntegrationTests : IClassFixture<WebApplicationFactory<
     [Fact]
     public async Task UnknownEndpoint_Returns404()
     {
-        var client = _factory.CreateClient();
+        var client = factory.CreateClient();
 
         var response = await client.GetAsync("/api/does-not-exist");
 

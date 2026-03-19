@@ -8,7 +8,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="Pages\Docs\" />
+      <Folder Include="wwwroot\uploads\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\DocAI.Services\DocAI.Services.csproj" />
     </ItemGroup>
 
 </Project>

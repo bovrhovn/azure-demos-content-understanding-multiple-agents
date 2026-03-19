@@ -1,8 +1,14 @@
 <Solution>
-  <Project Path="DocAI.Agents.Simple/DocAI.Agents.Simple.csproj" />
-  <Project Path="DocAI.MCP.Validator/DocAI.MCP.Validator.csproj" />
-  <Project Path="DocAI.Web/DocAI.Web.csproj" />
-  <Project Path="../../tests/DocAI.Web.Tests/DocAI.Web.Tests.csproj" />
-  <Project Path="../../tests/DocAI.MCP.Validator.Tests/DocAI.MCP.Validator.Tests.csproj" />
-  <Project Path="../../tests/DocAI.Web.Playwright/DocAI.Web.Playwright.csproj" />
+  <Folder Name="/Src/">
+    <Project Path="DocAI.Agents.Simple/DocAI.Agents.Simple.csproj" />
+    <Project Path="DocAI.MCP.Validator/DocAI.MCP.Validator.csproj" />
+    <Project Path="DocAI.Models/DocAI.Models.csproj" />
+    <Project Path="DocAI.Services/DocAI.Services.csproj" />
+    <Project Path="DocAI.Web/DocAI.Web.csproj" />
+  </Folder>
+  <Folder Name="/Tests/">
+    <Project Path="../../tests/DocAI.MCP.Validator.Tests/DocAI.MCP.Validator.Tests.csproj" />
+    <Project Path="../../tests/DocAI.Web.Playwright/DocAI.Web.Playwright.csproj" />
+    <Project Path="../../tests/DocAI.Web.Tests/DocAI.Web.Tests.csproj" />
+  </Folder>
 </Solution>

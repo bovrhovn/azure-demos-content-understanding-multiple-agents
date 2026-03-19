@@ -1,5 +1,5 @@
-using DocAI.Console.Helpers;
-using DocAI.Console.Models;
+using DocAI.Models;
+using DocAI.Services;
 
 namespace DocAI.Console.Agents;
 

@@ -1,7 +1,7 @@
 using System.Text.RegularExpressions;
-using DocAI.Console.Models;
+using DocAI.Models;
 using Spectre.Console;
-using ValidationResult = DocAI.Console.Models.ValidationResult;
+using ValidationResult = DocAI.Models.ValidationResult;
 
 namespace DocAI.Console.Agents;
 

@@ -18,6 +18,11 @@ builder.Services
     .WithHttpTransport()
     .WithToolsFromAssembly();
 
+if (builder.Environment.IsDevelopment())
+{
+    builder.Services.AddOpenApi();
+}
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())

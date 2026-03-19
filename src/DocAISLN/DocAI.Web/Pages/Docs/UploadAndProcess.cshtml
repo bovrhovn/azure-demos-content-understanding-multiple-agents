@@ -5,22 +5,199 @@
     ViewData["Title"] = "Upload and Process";
 }
 
-<h3></h3>
+<!-- Page Header -->
+<section class="docai-hero" style="padding: 2.5rem 0 3.5rem;">
+    <div class="container-xl">
+        <div class="docai-hero-badge mb-3">
+            <i class="fa-solid fa-cloud-arrow-up"></i> Document Processing
+        </div>
+        <h1 class="h2 mb-2">Upload &amp; Process a Document</h1>
+        <p class="lead mb-0" style="opacity:.85;">
+            Upload a PDF and let the multi-agent pipeline extract, analyse, and validate its content.
+        </p>
+    </div>
+</section>
 
-<form enctype="multipart/form-data" method="post">
-    <dl>
-        <dt>
-            <label asp-for="FormFile"></label>
-        </dt>
-        <dd>
-            <input asp-for="FormFile" type="file" />
-            <span asp-validation-for="FormFile"></span>
-        </dd>
-    </dl>
-    <input class="btn" type="submit" value="Upload and process file " />
-</form>
+<section class="py-5">
+    <div class="container-xl">
+        <div class="row justify-content-center">
+            <div class="col-lg-7">
 
-@if (TempData["Data"] != null)
-{
-    <p>Processed data from PDF</p>    
+                @if (TempData["Error"] != null)
+                {
+                    <div class="alert alert-danger d-flex align-items-center gap-2 mb-4" role="alert">
+                        <i class="fa-solid fa-circle-exclamation"></i>
+                        <span>@TempData["Error"]</span>
+                    </div>
+                }
+
+                @if (TempData["Data"] != null)
+                {
+                    <div class="alert alert-success d-flex align-items-center gap-2 mb-4" role="alert">
+                        <i class="fa-solid fa-circle-check"></i>
+                        <span>Document processed successfully. The extracted data is available below.</span>
+                    </div>
+                    <div class="docai-card p-4 mb-4">
+                        <h6 class="fw-semibold mb-2">
+                            <i class="fa-solid fa-file-lines me-1 text-docai"></i>Processed Output
+                        </h6>
+                        <pre class="mb-0" style="white-space: pre-wrap; word-break: break-word; font-size: .85rem;">@TempData["Data"]</pre>
+                    </div>
+                }
+
+                <!-- Upload Card -->
+                <div class="docai-card p-4 p-md-5">
+                    <h5 class="fw-semibold mb-1">
+                        <i class="fa-solid fa-file-pdf me-2 text-docai"></i>Select a PDF Document
+                    </h5>
+                    <p class="text-muted small mb-4">
+                        Supported format: <strong>PDF</strong>. Maximum file size: <strong>6 GB</strong>.
+                    </p>
+
+                    <form id="uploadForm" enctype="multipart/form-data" method="post">
+                        <!-- Drop Zone -->
+                        <div id="dropZone"
+                             class="docai-dropzone mb-4"
+                             role="button"
+                             tabindex="0"
+                             aria-label="Drop PDF here or click to browse">
+                            <div class="docai-dropzone-icon">
+                                <i class="fa-solid fa-cloud-arrow-up fa-2x text-docai"></i>
+                            </div>
+                            <p class="docai-dropzone-primary mb-1">
+                                Drag &amp; drop your PDF here
+                            </p>
+                            <p class="docai-dropzone-secondary mb-3">
+                                or click to browse your files
+                            </p>
+                            <input id="FormFile"
+                                   name="FormFile"
+                                   type="file"
+                                   accept=".pdf,application/pdf"
+                                   class="docai-dropzone-input"
+                                   aria-label="Choose PDF file" />
+                            <div id="filePreview" class="docai-file-preview d-none">
+                                <i class="fa-solid fa-file-pdf text-danger me-2"></i>
+                                <span id="fileName" class="fw-medium"></span>
+                                <button type="button" id="clearFile" class="btn-close btn-close-sm ms-2" aria-label="Remove file"></button>
+                            </div>
+                        </div>
+                        <span asp-validation-for="FormFile" class="text-danger small"></span>
+
+                        <!-- Submit -->
+                        <button id="submitBtn" type="submit" class="btn btn-docai-primary w-100" disabled>
+                            <i class="fa-solid fa-gears me-2"></i>Upload and Process
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Info Panel -->
+                <div class="docai-card p-4 mt-4">
+                    <h6 class="fw-semibold mb-3">
+                        <i class="fa-solid fa-circle-info me-1 text-docai"></i>What happens next?
+                    </h6>
+                    <div class="docai-step mb-2">
+                        <div class="docai-step-number">1</div>
+                        <div class="docai-step-content">
+                            <h6>Text Extraction</h6>
+                            <p>Azure AI Document Intelligence reads the PDF layout, tables, and key-value pairs.</p>
+                        </div>
+                    </div>
+                    <div class="docai-step mb-2">
+                        <div class="docai-step-number">2</div>
+                        <div class="docai-step-content">
+                            <h6>Structured Analysis</h6>
+                            <p>The Analyzer Agent identifies persons, emails, and tabular data from the raw text.</p>
+                        </div>
+                    </div>
+                    <div class="docai-step mb-0">
+                        <div class="docai-step-number">3</div>
+                        <div class="docai-step-content">
+                            <h6>Validation</h6>
+                            <p>The Validator Agent applies business rules via the MCP service to ensure data quality.</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+<script>
+(function () {
+    const dropZone   = document.getElementById('dropZone');
+    const fileInput  = document.getElementById('FormFile');
+    const submitBtn  = document.getElementById('submitBtn');
+    const filePreview = document.getElementById('filePreview');
+    const fileNameEl  = document.getElementById('fileName');
+    const clearBtn   = document.getElementById('clearFile');
+
+    function showFile(file) {
+        if (!file) return;
+        fileNameEl.textContent = file.name + ' (' + formatBytes(file.size) + ')';
+        filePreview.classList.remove('d-none');
+        dropZone.classList.add('docai-dropzone--has-file');
+        submitBtn.disabled = false;
+    }
+
+    function clearFile() {
+        fileInput.value = '';
+        filePreview.classList.add('d-none');
+        fileNameEl.textContent = '';
+        dropZone.classList.remove('docai-dropzone--has-file', 'docai-dropzone--drag');
+        submitBtn.disabled = true;
+    }
+
+    function formatBytes(bytes) {
+        if (bytes < 1024) return bytes + ' B';
+        if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
+        return (bytes / 1048576).toFixed(1) + ' MB';
+    }
+
+    fileInput.addEventListener('change', function () {
+        if (fileInput.files.length) showFile(fileInput.files[0]);
+    });
+
+    clearBtn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        clearFile();
+    });
+
+    dropZone.addEventListener('click', function (e) {
+        if (e.target !== clearBtn) fileInput.click();
+    });
+
+    dropZone.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); fileInput.click(); }
+    });
+
+    dropZone.addEventListener('dragover', function (e) {
+        e.preventDefault();
+        dropZone.classList.add('docai-dropzone--drag');
+    });
+
+    dropZone.addEventListener('dragleave', function () {
+        dropZone.classList.remove('docai-dropzone--drag');
+    });
+
+    dropZone.addEventListener('drop', function (e) {
+        e.preventDefault();
+        dropZone.classList.remove('docai-dropzone--drag');
+        const file = e.dataTransfer.files[0];
+        if (file) {
+            const dt = new DataTransfer();
+            dt.items.add(file);
+            fileInput.files = dt.files;
+            showFile(file);
+        }
+    });
+
+    document.getElementById('uploadForm').addEventListener('submit', function () {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Processing…';
+    });
+}());
+</script>
 }

@@ -149,6 +149,34 @@ Ensure you run the Docker build from the `src/DocAISLN/` directory as the build 
 docker build -f ../../containers/MCP-Validator -t docai-mcp-validator .
 ```
 
+### File upload returns an error
+
+- Confirm that the `wwwroot/uploads/` directory exists or that the application has write permission to create it.
+- Check that the uploaded file is a valid PDF and does not exceed the configured 6 GB request limit.
+- Verify that all required environment variables (`DOCENDPOINT`, `FOUNDRYENDPOINTMAIN`, etc.) are set so the agent pipeline can process the document.
+
+---
+
+## Web Frontend Usage
+
+### Uploading a Document
+
+1. Navigate to the **Upload & Process** page via the top navigation bar (`/Docs/UploadAndProcess`).
+2. Drag and drop a PDF file onto the drop zone, or click the drop zone to open a file browser.
+3. Confirm the file name and size shown in the preview.
+4. Click **Upload and Process** to submit. A spinner indicates the document is being processed.
+5. After processing, the page reloads and displays the extracted data output.
+
+### Running the Web App Locally
+
+```bash
+# No Azure credentials are required for basic page navigation and the upload UI.
+dotnet run --project src/DocAISLN/DocAI.Web/
+# Open http://localhost:5001 in your browser.
+```
+
+> **Note:** The agent pipeline that processes the uploaded PDF requires Azure credentials and all environment variables listed in [Setup and Configuration](#2-environment-variables).
+
 ---
 
 ## Key Concepts

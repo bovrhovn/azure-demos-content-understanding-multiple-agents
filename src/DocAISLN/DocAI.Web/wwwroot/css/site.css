@@ -314,3 +314,70 @@ a:focus-visible {
     background-color: var(--docai-surface) !important;
 }
 
+
+/* ---------- Upload Drop Zone ---------- */
+.docai-dropzone {
+    border: 2px dashed var(--docai-card-border);
+    border-radius: var(--docai-radius);
+    background: var(--docai-surface);
+    padding: 2.5rem 1.5rem;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+    position: relative;
+}
+
+.docai-dropzone:hover,
+.docai-dropzone:focus {
+    border-color: var(--docai-primary);
+    background: #fff;
+    box-shadow: var(--docai-shadow-sm);
+    outline: none;
+}
+
+.docai-dropzone--drag {
+    border-color: var(--docai-primary);
+    background: rgba(0, 120, 212, 0.04);
+    box-shadow: var(--docai-shadow-md);
+}
+
+.docai-dropzone--has-file {
+    border-color: var(--docai-primary);
+    background: #fff;
+}
+
+.docai-dropzone-icon {
+    margin-bottom: 0.75rem;
+}
+
+.docai-dropzone-primary {
+    font-weight: 600;
+    font-size: 1rem;
+    color: #1a1a2e;
+    margin: 0;
+}
+
+.docai-dropzone-secondary {
+    font-size: 0.85rem;
+    color: #6c757d;
+    margin: 0;
+}
+
+.docai-dropzone-input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.docai-file-preview {
+    display: inline-flex;
+    align-items: center;
+    background: #fff;
+    border: 1px solid var(--docai-card-border);
+    border-radius: 0.5rem;
+    padding: 0.4rem 0.75rem;
+    font-size: 0.85rem;
+    gap: 0.25rem;
+}

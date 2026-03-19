@@ -22,7 +22,7 @@ This solution demonstrates a **multi-agent pattern** where several specialized A
 1. **Ingest documents** – PDFs, images, and forms are sent to [Azure AI Document Intelligence](https://learn.microsoft.com/azure/ai-services/document-intelligence/overview) for structured extraction (tables, key-value pairs, layout).
 2. **Validate content** – a validation agent applies business rules using the [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) to ensure extracted data meets defined criteria.
 3. **Reason and respond** – an orchestrator agent, powered by [Azure AI Agent Service](https://learn.microsoft.com/azure/ai-services/agents/overview), coordinates the workflow and surfaces results to the user.
-4. **Present results** – a modern ASP.NET Core web frontend (`DocAI.Web`) displays the pipeline status and results.
+4. **Present results** – a modern ASP.NET Core web frontend (`DocAI.Web`) displays the pipeline status and results. A drag-and-drop **Upload & Process** page (`/Docs/UploadAndProcess`) lets you submit PDFs directly from the browser.
 
 ### High-Level Architecture
 
@@ -105,17 +105,18 @@ See [`containers/README.md`](./containers/README.md) for full Docker and Azure d
 ### Running Tests
 
 ```bash
-# Run all tests
-dotnet test tests/
-
-# Run only API tests
-dotnet test tests/DocAI.MCP.Validator.Tests/
-
-# Run only web integration tests
+# Run web integration tests (no Azure credentials required)
 dotnet test tests/DocAI.Web.Tests/
 
-# Run Playwright end-to-end tests (requires Playwright browsers installed)
+# Run MCP Validator integration tests (no Azure credentials required)
+dotnet test tests/DocAI.MCP.Validator.Tests/
+
+# Run Playwright end-to-end tests (requires Playwright browsers – see below)
 dotnet test tests/DocAI.Web.Playwright/
+
+# Install Playwright browsers (run once after first build)
+dotnet build tests/DocAI.Web.Playwright/
+pwsh tests/DocAI.Web.Playwright/bin/Debug/net10.0/playwright.ps1 install --with-deps chromium
 ```
 
 ---
@@ -142,9 +143,11 @@ The `tests/` folder contains three test projects:
 
 | Project | Type | Description |
 |---|---|---|
-| `DocAI.MCP.Validator.Tests` | Integration | Verifies the MCP Validator API starts and responds correctly |
-| `DocAI.Web.Tests` | Integration | Tests Razor Pages routes, page rendering, and error handling |
+| `DocAI.MCP.Validator.Tests` | Integration | Verifies the MCP Validator API starts, responds correctly, and exposes OpenAPI in Development |
+| `DocAI.Web.Tests` | Integration | Tests Razor Pages routes (Home, Privacy, Upload & Process), page rendering, and error handling |
 | `DocAI.Web.Playwright` | End-to-end | Browser-based tests using [Microsoft Playwright](https://playwright.dev/dotnet/) |
+
+> The web integration and MCP validator integration tests do **not** require Azure credentials and can be run offline.
 
 ---
 

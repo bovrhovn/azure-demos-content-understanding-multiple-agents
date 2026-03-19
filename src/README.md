@@ -26,8 +26,12 @@ src/DocAISLN/
 ├── DocAI.MCP.Validator/             # MCP Validator API service
 │   ├── Program.cs                   # Application startup
 │   └── appsettings.json
+├── DocAI.Models/                    # Shared data models library
+├── DocAI.Services/                  # Shared services library
 └── DocAI.Web/                       # Web frontend (Razor Pages)
     ├── Pages/
+    │   ├── Docs/
+    │   │   └── UploadAndProcess.cshtml   # File upload & processing page
     │   ├── Info/                    # Application pages
     │   │   ├── Index.cshtml         # Home page
     │   │   ├── Privacy.cshtml       # Privacy policy page
@@ -35,7 +39,7 @@ src/DocAISLN/
     │   └── Shared/
     │       └── _Layout.cshtml       # Master layout with Bootstrap + Font Awesome
     ├── wwwroot/                     # Static assets
-    │   ├── css/site.css             # Custom styles
+    │   ├── css/site.css             # Custom styles (includes drop-zone styles)
     │   └── js/site.js               # Custom scripts
     └── Program.cs                   # Application startup
 ```
@@ -79,7 +83,7 @@ dotnet run --project src/DocAISLN/DocAI.Agents.Simple/
 A standalone **ASP.NET Core Web API** that exposes document validation rules via the [Model Context Protocol (MCP)](https://modelcontextprotocol.io/). Other agents can call this service to validate extracted data.
 
 **Key packages:**
-- `Microsoft.AspNetCore.OpenApi` – OpenAPI / Swagger documentation
+- `Microsoft.AspNetCore.OpenApi` – OpenAPI / Swagger documentation (available in Development only)
 - `ModelContextProtocol` – MCP protocol implementation
 
 **Run:**
@@ -87,6 +91,7 @@ A standalone **ASP.NET Core Web API** that exposes document validation rules via
 ```bash
 dotnet run --project src/DocAISLN/DocAI.MCP.Validator/
 # OpenAPI UI available at http://localhost:5000/openapi/v1.json (Development only)
+# MCP endpoint available at http://localhost:5000/mcp
 ```
 
 **Docker:**
@@ -104,9 +109,18 @@ A modern **ASP.NET Core Razor Pages** web application that provides a browser-ba
 
 **Features:**
 - Home page with pipeline overview and quick-start cards
+- **Upload & Process page** – drag-and-drop file upload with live file preview, progress indicator, and step-by-step pipeline explanation
 - Privacy policy page
 - Responsive navigation with Font Awesome icons
 - Modern card-based layout with gradient accents
+
+**Pages:**
+
+| Page | Route | Description |
+|---|---|---|
+| Home | `/` | Pipeline overview, key components, and technology stack |
+| Upload & Process | `/Docs/UploadAndProcess` | Drag-and-drop PDF upload form with agent pipeline explanation |
+| Privacy | `/Info/Privacy` | Privacy policy |
 
 **Run:**
 

@@ -1,45 +1,46 @@
 using DocAI.Models;
-using DocAI.Services;
 using DocAI.Services.General;
+using Microsoft.Extensions.Logging;
 
-namespace DocAI.Console.Agents;
+namespace DocAI.Services.Agents;
 
 public class OrchestratorAgent(
     PdfService pdfService,
     PdfReaderAgent pdfReaderAgent,
     AnalyzerAgent analyzerAgent,
     ValidatorAgent validatorAgent,
-    IChatClient chatClient)
+    IChatClient chatClient,
+    ILogger<OrchestratorAgent> logger)
 {
     public async Task<(ExtractedData Data, ValidationResult Validation)> ProcessPdfAsync(string filePath)
     {
-        System.Console.WriteLine($"\n🤖 Orchestrator: Starting PDF extraction for '{Path.GetFileName(filePath)}'...\n");
+        logger.LogInformation("Orchestrator: Starting PDF extraction for '{FileName}'", Path.GetFileName(filePath));
 
         // Step 1: Extract raw text from PDF
-        System.Console.WriteLine("📄 Step 1: Extracting text from PDF...");
+        logger.LogInformation("Step 1: Extracting text from PDF...");
         var extractedData = pdfService.ExtractText(filePath);
-        System.Console.WriteLine($"   ✓ Extracted {extractedData.RawText.Length} characters from {extractedData.Metadata["PageCount"]} pages\n");
+        logger.LogInformation("Extracted {CharCount} characters from {PageCount} pages", 
+            extractedData.RawText.Length, extractedData.Metadata["PageCount"]);
 
         // Step 2: Analyze text structure
-        System.Console.WriteLine("🔍 Step 2: Analyzing document structure...");
+        logger.LogInformation("Step 2: Analyzing document structure...");
         var structure = await pdfReaderAgent.AnalyzeTextStructure(extractedData.RawText);
-        System.Console.WriteLine($"   {structure}\n");
+        logger.LogInformation("Structure analysis: {Structure}", structure);
 
         // Step 3: Extract structured data
-        System.Console.WriteLine("📊 Step 3: Extracting structured data (persons, emails, tables)...");
+        logger.LogInformation("Step 3: Extracting structured data (persons, emails, tables)...");
         extractedData = await analyzerAgent.ExtractStructuredData(extractedData);
-        System.Console.WriteLine($"   ✓ Found {extractedData.Persons.Count} persons");
-        System.Console.WriteLine($"   ✓ Found {extractedData.Emails.Count} emails");
-        System.Console.WriteLine($"   ✓ Found {extractedData.Tables.Count} tables\n");
+        logger.LogInformation("Found {PersonCount} persons, {EmailCount} emails, {TableCount} tables", 
+            extractedData.Persons.Count, extractedData.Emails.Count, extractedData.Tables.Count);
 
         // Step 4: Validate extracted data
-        System.Console.WriteLine("✅ Step 4: Validating extracted data...");
+        logger.LogInformation("Step 4: Validating extracted data...");
         var validation = await validatorAgent.ValidateExtractedData(extractedData);
-        System.Console.WriteLine($"   ✓ Validation complete: {validation.ValidItems.Count} valid, " +
-                                 $"{validation.InvalidItems.Count} invalid, {validation.UnconfirmedItems.Count} unconfirmed\n");
+        logger.LogInformation("Validation complete: {ValidCount} valid, {InvalidCount} invalid, {UnconfirmedCount} unconfirmed",
+            validation.ValidItems.Count, validation.InvalidItems.Count, validation.UnconfirmedItems.Count);
 
         // Step 5: Generate summary
-        System.Console.WriteLine("📝 Step 5: Generating summary...");
+        logger.LogInformation("Step 5: Generating summary...");
         await GenerateSummary(extractedData, validation);
 
         return (extractedData, validation);
@@ -62,6 +63,6 @@ public class OrchestratorAgent(
             """;
 
         var response = await chatClient.CompleteAsync([new ChatMessage(ChatRole.User, prompt)]);
-        System.Console.WriteLine($"   {response.Message.Content}\n");
+        logger.LogInformation("Summary: {Summary}", response.Message.Content);
     }
 }

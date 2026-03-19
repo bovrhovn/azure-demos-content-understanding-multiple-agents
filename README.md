@@ -19,34 +19,49 @@
 
 This solution demonstrates a **multi-agent pattern** where several specialized AI agents collaborate to:
 
-1. **Ingest documents** – PDFs, images, and forms are sent to [Azure AI Document Intelligence](https://learn.microsoft.com/azure/ai-services/document-intelligence/overview) for structured extraction (tables, key-value pairs, layout).
-2. **Validate content** – a validation agent applies business rules using the [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) to ensure extracted data meets defined criteria.
-3. **Reason and respond** – an orchestrator agent, powered by [Azure AI Agent Service](https://learn.microsoft.com/azure/ai-services/agents/overview), coordinates the workflow and surfaces results to the user.
-4. **Present results** – a modern ASP.NET Core web frontend (`DocAI.Web`) displays the pipeline status and results. A drag-and-drop **Upload & Process** page (`/Docs/UploadAndProcess`) lets you submit PDFs directly from the browser.
+1. **Ingest documents** – PDFs are uploaded through a modern web interface with drag-and-drop support
+2. **Process with agents** – A multi-agent pipeline (PDF Reader → Analyzer → Validator → Orchestrator) extracts structured data
+3. **Alternative processing** – Azure AI Document Intelligence provides direct document analysis with prebuilt models
+4. **File management** – Browse uploaded files, select any document for processing, or upload new files
+5. **Present results** – Modern web UI displays extracted persons, emails, tables, and validation results
 
 ### High-Level Architecture
 
 ```
-┌──────────────────────────────────────────────────────────────┐
-│                      Orchestrator Agent                      │
-│             (Azure AI Agent Service on AI Foundry)           │
-└────────────┬────────────────────────┬────────────────────────┘
-             │                        │
-     ┌───────▼────────┐     ┌─────────▼──────────┐
-     │ Document Intel │     │  Validation Agent  │
-     │    Agent       │     │   (MCP / Rules)    │
-     └───────┬────────┘     └─────────┬──────────┘
-             │                        │
-     ┌───────▼────────────────────────▼──────────┐
-     │         Azure AI Document Intelligence    │
-     │      (layout, form, table extraction)     │
-     └───────────────────────────────────────────┘
-                          │
-     ┌────────────────────▼────────────────────┐
-     │              DocAI.Web                  │
-     │   (ASP.NET Core Razor Pages frontend)   │
-     └─────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────────────────┐
+│                    DocAI.Web (Frontend)                         │
+│  File Upload • File Selection • Results Display • Progress      │
+└──────────────────┬─────────────────────────┬────────────────────┘
+                   │                         │
+       ┌───────────▼─────────────┐  ┌────────▼─────────────────┐
+       │  Multi-Agent Pipeline   │  │  Azure Doc Intelligence  │
+       │  ┌────────────────────┐ │  │  Direct API Integration  │
+       │  │ OrchestratorAgent  │ │  │                          │
+       │  │  ┌──────────────┐  │ │  │  Prebuilt Models:        │
+       │  │  │ PdfReaderAgt │  │ │  │  - Layout extraction     │
+       │  │  │ AnalyzerAgent│  │ │  │  - Table detection       │
+       │  │  │ ValidatorAgt │  │ │  │  - Text recognition      │
+       │  │  └──────────────┘  │ │  │                          │
+       │  └────────────────────┘ │  └──────────────────────────┘
+       └─────────────────────────┘
+                   │
+       ┌───────────▼─────────────────┐
+       │   DocAI.Services Layer      │
+       │ • IDocumentProcessingService│
+       │ • IAzureDocIntellService    │
+       │ • PdfService                │
+       └─────────────────────────────┘
 ```
+
+### Key Features
+
+✅ **File Management** - Upload, list, and select PDF documents  
+✅ **Dual Processing Modes** - Choose between multi-agent pipeline or Azure Document Intelligence  
+✅ **Real-time Progress** - Visual feedback during document processing  
+✅ **Rich Results Display** - Structured view of persons, emails, tables with validation status  
+✅ **Modern UI** - Responsive Bootstrap 5 interface with drag-and-drop upload  
+✅ **Background Processing** - Non-blocking document analysis with TempData results  
+✅ **Comprehensive Testing** - Integration tests (xUnit) and E2E tests (Playwright)  
 
 ---
 
@@ -59,6 +74,34 @@ This solution demonstrates a **multi-agent pattern** where several specialized A
 - An [Azure AI Foundry](https://learn.microsoft.com/azure/ai-foundry/what-is-ai-foundry) hub and project
 - An [Azure AI Document Intelligence](https://learn.microsoft.com/azure/ai-services/document-intelligence/quickstarts/get-started-sdks-rest-api) resource
 
+### Configuration
+
+Update `src/DocAISLN/DocAI.Web/appsettings.json` or set environment variables:
+
+```json
+{
+  "AzureAI": {
+    "FoundryEndpointMain": "https://<your-foundry-endpoint>/openai",
+    "FoundryEndpointMini": "https://<your-foundry-endpoint>/openai",
+    "MainModelName": "gpt-4o",
+    "MiniModelName": "gpt-4o-mini",
+    "DocumentEndpoint": "https://<your-doc-intelligence>.cognitiveservices.azure.com/",
+    "DocumentModelId": "prebuilt-layout"
+  }
+}
+```
+
+Or use environment variables:
+
+```bash
+export FOUNDRYENDPOINTMAIN="https://<your-foundry-endpoint>/openai"
+export FOUNDRYENDPOINTMINI="https://<your-foundry-endpoint>/openai"
+export ORCHESTRATORMODEL="gpt-4o"
+export MINIMODEL="gpt-4o-mini"
+export DOCENDPOINT="https://<your-doc-intelligence>.cognitiveservices.azure.com/"
+export DOCMODELID="prebuilt-layout"
+```
+
 ### Quick Start
 
 ```bash
@@ -66,16 +109,7 @@ This solution demonstrates a **multi-agent pattern** where several specialized A
 git clone https://github.com/bovrhovn/azure-demos-content-understanding-multiple-agents.git
 cd azure-demos-content-understanding-multiple-agents
 
-# 2. Configure environment variables
-export DOCENDPOINT="https://<your-doc-intelligence>.cognitiveservices.azure.com/"
-export FOUNDRYENDPOINTMAIN="https://<your-foundry-endpoint>/openai"
-export FOUNDRYENDPOINTMINI="https://<your-foundry-endpoint>/openai"
-export ORCHESTRATORMODEL="gpt-4o"
-export MINIMODEL="gpt-4o-mini"
-export MODELID="prebuilt-layout"
-export FILEPATH="/path/to/document.pdf"
-
-# 3. Build the solution
+# 2. Build the solution
 dotnet build src/DocAISLN/
 
 # 4. Run the web frontend

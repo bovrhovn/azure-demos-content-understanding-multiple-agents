@@ -11,7 +11,14 @@
     </ItemGroup>
 
     <ItemGroup>
+      <PackageReference Include="Azure.AI.Inference" Version="1.0.0-beta.4" />
+      <PackageReference Include="Azure.AI.DocumentIntelligence" Version="1.0.0" />
+      <PackageReference Include="Azure.Identity" Version="1.19.0" />
+      <PackageReference Include="Microsoft.Extensions.AI" Version="9.5.0" />
+      <PackageReference Include="Microsoft.Extensions.AI.AzureAIInference" Version="9.6.0-preview.1.25310.2" />
       <PackageReference Include="Microsoft.Extensions.Logging" Version="10.0.5" />
+      <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.5" />
+      <PackageReference Include="Microsoft.Extensions.Options" Version="10.0.5" />
       <PackageReference Include="UglyToad.PdfPig" Version="1.7.0-custom-5" />
     </ItemGroup>
 

@@ -2,7 +2,7 @@
 using DocAI.Models;
 using UglyToad.PdfPig;
 
-namespace DocAI.Services;
+namespace DocAI.Services.General;
 
 public class PdfService
 {

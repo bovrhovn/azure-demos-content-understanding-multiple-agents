@@ -7,22 +7,21 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace DocAI.Web.Pages.Docs;
 
-public class UploadAndProcessPageModel(
-    ILogger<UploadAndProcessPageModel> logger,
-    IDocumentProcessingService documentProcessingService) : PageModel
+public class UploadAndProcessWithADIPageModel(
+    ILogger<UploadAndProcessWithADIPageModel> logger,
+    IAzureDocIntelligenceService azureDocIntelligenceService) : PageModel
 {
     [BindProperty]
     public IFormFile? FormFile { get; set; }
     
     public List<FileInfo> UploadedFiles { get; set; } = [];
     public ExtractedData? ProcessedData { get; set; }
-    public ValidationResult? ValidationResult { get; set; }
     public string? ErrorMessage { get; set; }
     public bool IsProcessing { get; set; }
 
     public void OnGet()
     {
-        logger.LogInformation("Accessed Upload and Process page at {DateLoaded}", DateTime.UtcNow);
+        logger.LogInformation("Accessed UploadAndProcessWithADI page at {DateLoaded}", DateTime.UtcNow);
         LoadUploadedFiles();
         LoadProcessedData();
     }
@@ -66,7 +65,7 @@ public class UploadAndProcessPageModel(
 
     public async Task<IActionResult> OnPostProcessAsync(string fileName)
     {
-        logger.LogInformation("Process requested for file: {FileName}", fileName);
+        logger.LogInformation("ADI Process requested for file: {FileName}", fileName);
 
         if (string.IsNullOrEmpty(fileName))
         {
@@ -89,22 +88,21 @@ public class UploadAndProcessPageModel(
         {
             IsProcessing = true;
             
-            // Process the document using the agent pipeline
-            logger.LogInformation("Starting document processing for: {FileName}", fileName);
-            var (data, validation) = await documentProcessingService.ProcessPdfAsync(filePath);
+            // Process the document using Azure Document Intelligence
+            logger.LogInformation("Starting Azure Document Intelligence analysis for: {FileName}", fileName);
+            var data = await azureDocIntelligenceService.AnalyzeDocumentAsync(filePath);
             
             // Store results in TempData
             TempData["ProcessedData"] = JsonSerializer.Serialize(data);
-            TempData["ValidationResult"] = JsonSerializer.Serialize(validation);
             TempData["ProcessedFileName"] = fileName;
-            TempData["SuccessMessage"] = $"Document '{fileName}' processed successfully!";
+            TempData["SuccessMessage"] = $"Document '{fileName}' analyzed successfully with Azure Document Intelligence!";
             
-            logger.LogInformation("Document processed successfully: {FileName}", fileName);
+            logger.LogInformation("Document analyzed successfully: {FileName}", fileName);
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "Error processing file: {FileName}", fileName);
-            TempData["ErrorMessage"] = $"Error processing '{fileName}': {ex.Message}";
+            logger.LogError(ex, "Error analyzing file with ADI: {FileName}", fileName);
+            TempData["ErrorMessage"] = $"Error analyzing '{fileName}': {ex.Message}";
         }
 
         return RedirectToPage();
@@ -113,7 +111,6 @@ public class UploadAndProcessPageModel(
     public IActionResult OnPostClearResults()
     {
         TempData.Remove("ProcessedData");
-        TempData.Remove("ValidationResult");
         TempData.Remove("ProcessedFileName");
         TempData["SuccessMessage"] = "Results cleared";
         return RedirectToPage();
@@ -154,22 +151,6 @@ public class UploadAndProcessPageModel(
             catch (Exception ex)
             {
                 logger.LogError(ex, "Error deserializing processed data");
-            }
-        }
-
-        if (TempData.ContainsKey("ValidationResult"))
-        {
-            try
-            {
-                var json = TempData["ValidationResult"]?.ToString();
-                if (!string.IsNullOrEmpty(json))
-                {
-                    ValidationResult = JsonSerializer.Deserialize<ValidationResult>(json);
-                }
-            }
-            catch (Exception ex)
-            {
-                logger.LogError(ex, "Error deserializing validation result");
             }
         }
     }

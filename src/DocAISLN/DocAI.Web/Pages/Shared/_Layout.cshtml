@@ -3,42 +3,77 @@
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>@ViewData["Title"]</title>
-    <script type="importmap"></script>
+    <title>@ViewData["Title"] – DocAI</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
-    <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+          crossorigin="anonymous" referrerpolicy="no-referrer"/>
+    <link rel="stylesheet" href="~/css/site.css"/>
 </head>
 <body>
 <header>
-    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-        <div class="container">
-            <a class="navbar-brand" asp-area="" asp-page="/Index">Example DocAI</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+    <nav class="navbar navbar-expand-lg navbar-dark docai-navbar shadow-sm">
+        <div class="container-xl">
+            <a class="navbar-brand d-flex align-items-center gap-2" asp-area="" asp-page="/Info/Index">
+                <i class="fa-solid fa-brain fa-lg"></i>
+                <span class="fw-semibold">DocAI</span>
+            </a>
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarMain" aria-controls="navbarMain"
                     aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                <ul class="navbar-nav flex-grow-1">
+            <div class="collapse navbar-collapse" id="navbarMain">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-page="/Index">Home</a>
+                        <a class="nav-link" asp-area="" asp-page="/Info/Index">
+                            <i class="fa-solid fa-house me-1"></i>Home
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="" asp-page="/Info/Privacy">
+                            <i class="fa-solid fa-shield-halved me-1"></i>Privacy
+                        </a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link" href="https://github.com/bovrhovn/azure-demos-content-understanding-multiple-agents" target="_blank" rel="noopener noreferrer">
+                            <i class="fa-brands fa-github me-1"></i>GitHub
+                        </a>
                     </li>
                 </ul>
             </div>
         </div>
     </nav>
 </header>
-<div class="container">
-    <main role="main" class="pb-3">
-        @RenderBody()
-    </main>
-</div>
 
-<footer class="border-top footer text-muted">
-    <div class="container">
-        &copy; 2026 - <a asp-area="" asp-page="/Privacy">Privacy</a>
+<main role="main" class="flex-grow-1">
+    @RenderBody()
+</main>
+
+<footer class="docai-footer mt-auto py-4">
+    <div class="container-xl">
+        <div class="row align-items-center">
+            <div class="col-md-6 d-flex align-items-center gap-2 mb-2 mb-md-0">
+                <i class="fa-solid fa-brain text-primary"></i>
+                <span class="fw-semibold">DocAI</span>
+                <span class="text-muted small">&copy; @DateTime.Now.Year – Azure Content Understanding Demo</span>
+            </div>
+            <div class="col-md-6 text-md-end">
+                <a asp-area="" asp-page="/Info/Privacy" class="text-muted small me-3 text-decoration-none">
+                    <i class="fa-solid fa-shield-halved me-1"></i>Privacy
+                </a>
+                <a href="https://learn.microsoft.com/azure/ai-services/document-intelligence/overview"
+                   target="_blank" rel="noopener noreferrer" class="text-muted small text-decoration-none">
+                    <i class="fa-solid fa-arrow-up-right-from-square me-1"></i>Azure Docs
+                </a>
+            </div>
+        </div>
     </div>
 </footer>
+
 <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="~/js/site.js" asp-append-version="true"></script>
 @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

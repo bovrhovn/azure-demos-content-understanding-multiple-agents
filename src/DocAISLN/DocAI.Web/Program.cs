@@ -20,3 +20,6 @@ app.UseAuthorization();
 app.UseStaticFiles();
 app.MapRazorPages();
 app.Run();
+
+// Expose Program class for WebApplicationFactory in test projects
+public partial class Program { }

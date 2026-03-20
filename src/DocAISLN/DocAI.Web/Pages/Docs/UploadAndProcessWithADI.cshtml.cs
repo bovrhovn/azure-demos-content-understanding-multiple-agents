@@ -1,6 +1,5 @@
 ﻿using System.Text.Json;
 using DocAI.Models;
-using DocAI.Services;
 using DocAI.Services.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;

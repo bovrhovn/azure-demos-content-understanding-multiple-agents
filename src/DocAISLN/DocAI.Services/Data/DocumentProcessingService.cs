@@ -1,4 +1,6 @@
 using Azure.AI.Inference;
+using Azure.Core;
+using Azure.Core.Pipeline;
 using Azure.Identity;
 using DocAI.Models;
 using DocAI.Services.Agents;
@@ -16,7 +18,7 @@ public class DocumentProcessingService(
     ILoggerFactory loggerFactory)
     : IDocumentProcessingService
 {
-    private readonly DocumentProcessingOptions _options = options.Value;
+    private readonly DocumentProcessingOptions options = options.Value;
 
     public async Task<(ExtractedData Data, ValidationResult Validation)> ProcessPdfAsync(string filePath)
     {
@@ -24,16 +26,14 @@ public class DocumentProcessingService(
 
         try
         {
-            // Create chat clients for main and mini models
-            var mainClient = new ChatCompletionsClient(
-                new Uri(_options.FoundryEndpointMain),
-                new DefaultAzureCredential());
-            var miniClient = new ChatCompletionsClient(
-                new Uri(_options.FoundryEndpointMini),
-                new DefaultAzureCredential());
-
-            var mainChatClient = new SimpleChatClient(mainClient, _options.MainModelName);
-            var miniChatClient = new SimpleChatClient(miniClient, _options.MiniModelName);
+            var credential = new DefaultAzureCredential();
+            var clientOptions = new AzureAIInferenceClientOptions();
+            var tokenPolicy = new BearerTokenAuthenticationPolicy(credential,
+                ["https://cognitiveservices.azure.com/.default"]);
+            clientOptions.AddPolicy(tokenPolicy, HttpPipelinePosition.PerRetry);
+            var mainChatClient =
+                new SimpleChatClient(new ChatCompletionsClient(new Uri(options.FoundryEndpointMain), credential, clientOptions), options.MainModelName);
+            var miniChatClient = new SimpleChatClient(new ChatCompletionsClient(new Uri(options.FoundryEndpointMini), credential, clientOptions), options.MiniModelName);
 
             // Create agents
             var pdfReaderAgent = new PdfReaderAgent(miniChatClient);

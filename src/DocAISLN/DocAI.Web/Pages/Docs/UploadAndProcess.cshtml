@@ -40,12 +40,11 @@
             </div>
         }
 
-        <div class="row g-4">
-            <!-- Left Column: File Management -->
-            <div class="col-lg-4">
-                
-                <!-- Upload New File Card -->
-                <div class="docai-card p-4 mb-4">
+        <!-- Top Row: Upload and File List Side by Side -->
+        <div class="row g-4 mb-4">
+            <!-- Upload New File Card -->
+            <div class="col-lg-6">
+                <div class="docai-card p-4 h-100">
                     <h5 class="fw-semibold mb-1 d-flex align-items-center">
                         <i class="fa-solid fa-cloud-arrow-up me-2 text-docai"></i>
                         <span>Upload New File</span>
@@ -71,9 +70,11 @@
                         </button>
                     </form>
                 </div>
+            </div>
 
-                <!-- Uploaded Files Card -->
-                <div class="docai-card p-4">
+            <!-- Uploaded Files Card -->
+            <div class="col-lg-6">
+                <div class="docai-card p-4 h-100">
                     <h5 class="fw-semibold mb-3 d-flex align-items-center">
                         <i class="fa-solid fa-folder-open me-2 text-docai"></i>
                         <span>Uploaded Files</span>
@@ -110,21 +111,50 @@
                         </div>
                     }
                 </div>
-
             </div>
+        </div>
 
-            <!-- Right Column: Results & Info -->
-            <div class="col-lg-8">
+        <!-- Bottom Row: Processing Info and Results -->
+        <div class="row g-4">
+            <div class="col-12">
                 
                 <!-- Processing Info -->
                 <div id="processingIndicator" class="d-none">
-                    <div class="docai-card p-4 mb-4">
-                        <div class="text-center">
-                            <div class="spinner-border text-docai mb-3" role="status">
-                                <span class="visually-hidden">Processing...</span>
+                    <div class="docai-progress-container">
+                        <h5 class="fw-semibold mb-4 text-center">
+                            <i class="fa-solid fa-robot me-2 text-docai"></i>Processing Document
+                        </h5>
+                        
+                        <div class="docai-progress-steps">
+                            <div class="docai-progress-step completed" id="step-upload">
+                                <div class="docai-progress-step-circle">
+                                    <i class="fa-solid fa-check"></i>
+                                </div>
+                                <div class="docai-progress-step-label">Upload</div>
                             </div>
-                            <h5 class="fw-semibold mb-2">Processing Document...</h5>
-                            <p class="text-muted mb-0">The multi-agent pipeline is analyzing your document. This may take a minute.</p>
+                            <div class="docai-progress-step active" id="step-extract">
+                                <div class="docai-progress-step-circle">
+                                    <div class="spinner-border spinner-border-sm"></div>
+                                </div>
+                                <div class="docai-progress-step-label">PDF Reader</div>
+                            </div>
+                            <div class="docai-progress-step" id="step-analyze">
+                                <div class="docai-progress-step-circle">3</div>
+                                <div class="docai-progress-step-label">Analyzer</div>
+                            </div>
+                            <div class="docai-progress-step" id="step-validate">
+                                <div class="docai-progress-step-circle">4</div>
+                                <div class="docai-progress-step-label">Validator</div>
+                            </div>
+                            <div class="docai-progress-step" id="step-complete">
+                                <div class="docai-progress-step-circle">5</div>
+                                <div class="docai-progress-step-label">Complete</div>
+                            </div>
+                        </div>
+                        
+                        <div class="docai-progress-status">
+                            <h6 id="progressTitle">PDF Reader Agent Working</h6>
+                            <p id="progressDescription">Extracting text and analyzing document structure and quality...</p>
                         </div>
                     </div>
                 </div>
@@ -337,7 +367,6 @@
                         </div>
                     </div>
                 }
-                
             </div>
         </div>
     </div>

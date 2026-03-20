@@ -40,12 +40,11 @@
             </div>
         }
 
-        <div class="row g-4">
-            <!-- Left Column: File Management -->
-            <div class="col-lg-4">
-                
-                <!-- Upload New File Card -->
-                <div class="docai-card p-4 mb-4">
+        <!-- Top Row: Upload and File List Side by Side -->
+        <div class="row g-4 mb-4">
+            <!-- Upload New File Card -->
+            <div class="col-lg-6">
+                <div class="docai-card p-4 h-100">
                     <h5 class="fw-semibold mb-1 d-flex align-items-center">
                         <i class="fa-solid fa-cloud-arrow-up me-2 text-primary"></i>
                         <span>Upload New File</span>
@@ -71,9 +70,11 @@
                         </button>
                     </form>
                 </div>
+            </div>
 
-                <!-- Uploaded Files Card -->
-                <div class="docai-card p-4">
+            <!-- Uploaded Files Card -->
+            <div class="col-lg-6">
+                <div class="docai-card p-4 h-100">
                     <h5 class="fw-semibold mb-3 d-flex align-items-center">
                         <i class="fa-solid fa-folder-open me-2 text-primary"></i>
                         <span>Uploaded Files</span>
@@ -110,21 +111,46 @@
                         </div>
                     }
                 </div>
-
             </div>
+        </div>
 
-            <!-- Right Column: Results & Info -->
-            <div class="col-lg-8">
+        <!-- Bottom Row: Processing Info and Results -->
+        <div class="row g-4">
+            <div class="col-12">
                 
                 <!-- Processing Indicator -->
                 <div id="processingIndicator" class="d-none">
-                    <div class="docai-card p-4 mb-4">
-                        <div class="text-center">
-                            <div class="spinner-border text-primary mb-3">
-                                <span class="visually-hidden">Analyzing...</span>
+                    <div class="docai-progress-container">
+                        <h5 class="fw-semibold mb-4 text-center">
+                            <i class="fa-solid fa-brain me-2 text-primary"></i>Analyzing Document
+                        </h5>
+                        
+                        <div class="docai-progress-steps">
+                            <div class="docai-progress-step completed" id="step-upload">
+                                <div class="docai-progress-step-circle">
+                                    <i class="fa-solid fa-check"></i>
+                                </div>
+                                <div class="docai-progress-step-label">Upload</div>
                             </div>
-                            <h5 class="fw-semibold mb-2">Analyzing Document...</h5>
-                            <p class="text-muted mb-0">Azure Document Intelligence is processing your document.</p>
+                            <div class="docai-progress-step active" id="step-extract">
+                                <div class="docai-progress-step-circle">
+                                    <div class="spinner-border spinner-border-sm"></div>
+                                </div>
+                                <div class="docai-progress-step-label">Extract Text</div>
+                            </div>
+                            <div class="docai-progress-step" id="step-analyze">
+                                <div class="docai-progress-step-circle">3</div>
+                                <div class="docai-progress-step-label">Analyze Layout</div>
+                            </div>
+                            <div class="docai-progress-step" id="step-complete">
+                                <div class="docai-progress-step-circle">4</div>
+                                <div class="docai-progress-step-label">Complete</div>
+                            </div>
+                        </div>
+                        
+                        <div class="docai-progress-status">
+                            <h6 id="progressTitle">Extracting Document Content</h6>
+                            <p id="progressDescription">Azure Document Intelligence is analyzing your document structure and extracting text...</p>
                         </div>
                     </div>
                 </div>
@@ -254,7 +280,6 @@
                         </div>
                     </div>
                 }
-                
             </div>
         </div>
     </div>

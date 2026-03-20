@@ -1,5 +1,11 @@
+using System.Net;
+using HealthChecks.UI.Client;
+using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+
 var builder = WebApplication.CreateBuilder(args);
 builder.WebHost.ConfigureKestrel(settings => settings.AddServerHeader = false);
+builder.Services.AddHealthChecks();
 builder.Services.AddTransient<ILogger>(p =>
 {
     var loggerFactory = p.GetRequiredService<ILoggerFactory>();
@@ -31,6 +37,27 @@ if (app.Environment.IsDevelopment())
 }
 
 app.MapMcp("/mcp");
+
+app.UseExceptionHandler(options =>
+{
+    options.Run(async context =>
+    {
+        context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+        context.Response.ContentType = "application/json";
+        var exception = context.Features.Get<IExceptionHandlerFeature>();
+        if (exception != null)
+        {
+            var message = $"{exception.Error.Message}";
+            await context.Response.WriteAsync(message);
+        }
+    });
+});
+app.MapHealthChecks($"/health", new HealthCheckOptions
+{
+    Predicate = _ => true,
+    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+}).AllowAnonymous();
+
 app.Run();
 
 // Expose Program class for WebApplicationFactory in test projects

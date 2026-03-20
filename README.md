@@ -23,7 +23,7 @@ This solution demonstrates a **multi-agent pattern** where several specialized A
 2. **Process with agents** – A multi-agent pipeline (PDF Reader → Analyzer → Validator → Orchestrator) extracts structured data
 3. **Alternative processing** – Azure AI Document Intelligence provides direct document analysis with prebuilt models
 4. **File management** – Browse uploaded files, select any document for processing, or upload new files
-5. **Present results** – Modern web UI displays extracted persons, emails, tables, and validation results
+5. **Present results** – Modern web UI displays extracted persons, emails, tables, and validation results with real-time progress tracking
 
 ### High-Level Architecture
 
@@ -55,13 +55,14 @@ This solution demonstrates a **multi-agent pattern** where several specialized A
 
 ### Key Features
 
-✅ **File Management** - Upload, list, and select PDF documents  
+✅ **File Management** - Upload, list, and select PDF documents with side-by-side layout  
 ✅ **Dual Processing Modes** - Choose between multi-agent pipeline or Azure Document Intelligence  
-✅ **Real-time Progress** - Visual feedback during document processing  
+✅ **Real-time Progress** - Step-by-step visual progress tracking with detailed status updates  
 ✅ **Rich Results Display** - Structured view of persons, emails, tables with validation status  
-✅ **Modern UI** - Responsive Bootstrap 5 interface with drag-and-drop upload  
+✅ **Modern UI** - Responsive Bootstrap 5 interface with drag-and-drop upload and sticky footer  
+✅ **Smart Button States** - Analysis buttons are disabled until a file is selected  
 ✅ **Background Processing** - Non-blocking document analysis with TempData results  
-✅ **Comprehensive Testing** - Integration tests (xUnit) and E2E tests (Playwright)  
+✅ **Comprehensive Testing** - Integration tests (xUnit) and E2E tests (Playwright)
 
 ---
 

@@ -2,6 +2,7 @@
 
 public class AzureDocIntelligenceOptions
 {
+    public const string SectionName = "AzureDocIntelligence";
     public required string DocumentEndpoint { get; set; }
-    public required string ModelId { get; set; }
+    public string ModelId { get; set; } = "prebuilt-layout";
 }

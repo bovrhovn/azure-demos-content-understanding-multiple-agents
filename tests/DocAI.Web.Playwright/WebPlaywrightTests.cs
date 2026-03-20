@@ -104,6 +104,125 @@ public class PrivacyPageTests : PageTest
 }
 
 /// <summary>
+/// End-to-end browser tests for Upload and Process pages with new side-by-side layout.
+/// </summary>
+[TestFixture]
+[Category("E2E")]
+public class UploadPageLayoutTests : PageTest
+{
+    private string BaseUrl => DocAiServerSetup.BaseUrl;
+
+    [Test]
+    public async Task UploadAndProcess_PageLoadsSuccessfully()
+    {
+        await Page.GotoAsync($"{BaseUrl}/Docs/UploadAndProcess");
+
+        await Expect(Page).ToHaveTitleAsync(new System.Text.RegularExpressions.Regex("Upload and Process"));
+    }
+
+    [Test]
+    public async Task UploadAndProcess_HasSideBySideLayout()
+    {
+        await Page.GotoAsync($"{BaseUrl}/Docs/UploadAndProcess");
+
+        // Check that the top row with side-by-side layout exists
+        var topRow = Page.Locator(".row.g-4.mb-4").First;
+        await Expect(topRow).ToBeVisibleAsync();
+
+        // Verify upload card is in col-lg-6
+        var uploadCard = topRow.Locator(".col-lg-6").First;
+        await Expect(uploadCard).ToBeVisibleAsync();
+        await Expect(uploadCard.Locator("h5")).ToContainTextAsync("Upload New File");
+
+        // Verify file list card is in col-lg-6
+        var fileListCard = topRow.Locator(".col-lg-6").Last;
+        await Expect(fileListCard).ToBeVisibleAsync();
+        await Expect(fileListCard.Locator("h5")).ToContainTextAsync("Uploaded Files");
+    }
+
+    [Test]
+    public async Task UploadAndProcess_UploadCardContainsDropZone()
+    {
+        await Page.GotoAsync($"{BaseUrl}/Docs/UploadAndProcess");
+
+        var dropZone = Page.Locator("#dropZone");
+        await Expect(dropZone).ToBeVisibleAsync();
+        await Expect(dropZone).ToContainTextAsync("Drop PDF here");
+    }
+
+    [Test]
+    public async Task UploadAndProcess_ProcessButtonIsDisabledByDefault()
+    {
+        await Page.GotoAsync($"{BaseUrl}/Docs/UploadAndProcess");
+
+        var processBtn = Page.Locator("#processSelectedBtn");
+        
+        // Check if button exists (only if files are present)
+        var btnCount = await processBtn.CountAsync();
+        if (btnCount > 0)
+        {
+            await Expect(processBtn).ToBeDisabledAsync();
+        }
+    }
+
+    [Test]
+    public async Task UploadAndProcessWithADI_PageLoadsSuccessfully()
+    {
+        await Page.GotoAsync($"{BaseUrl}/Docs/UploadAndProcessWithADI");
+
+        await Expect(Page).ToHaveTitleAsync(new System.Text.RegularExpressions.Regex("Azure Document Intelligence"));
+    }
+
+    [Test]
+    public async Task UploadAndProcessWithADI_HasSideBySideLayout()
+    {
+        await Page.GotoAsync($"{BaseUrl}/Docs/UploadAndProcessWithADI");
+
+        // Check that the top row with side-by-side layout exists
+        var topRow = Page.Locator(".row.g-4.mb-4").First;
+        await Expect(topRow).ToBeVisibleAsync();
+
+        // Verify upload card is in col-lg-6
+        var uploadCard = topRow.Locator(".col-lg-6").First;
+        await Expect(uploadCard).ToBeVisibleAsync();
+        await Expect(uploadCard.Locator("h5")).ToContainTextAsync("Upload New File");
+
+        // Verify file list card is in col-lg-6
+        var fileListCard = topRow.Locator(".col-lg-6").Last;
+        await Expect(fileListCard).ToBeVisibleAsync();
+        await Expect(fileListCard.Locator("h5")).ToContainTextAsync("Uploaded Files");
+    }
+
+    [Test]
+    public async Task UploadAndProcessWithADI_ProgressStepsArePresent()
+    {
+        await Page.GotoAsync($"{BaseUrl}/Docs/UploadAndProcessWithADI");
+
+        // The progress indicator should exist but be hidden by default
+        var progressIndicator = Page.Locator("#processingIndicator");
+        await Expect(progressIndicator).ToBeAttachedAsync();
+        
+        // Check for progress steps structure
+        var progressSteps = progressIndicator.Locator(".docai-progress-steps");
+        await Expect(progressSteps).ToBeAttachedAsync();
+    }
+
+    [Test]
+    public async Task UploadPages_FooterIsStickyAtBottom()
+    {
+        await Page.GotoAsync($"{BaseUrl}/Docs/UploadAndProcess");
+
+        var footer = Page.Locator("footer.docai-footer");
+        await Expect(footer).ToBeVisibleAsync();
+
+        // Check that body uses flexbox for sticky footer
+        var body = Page.Locator("body");
+        var displayStyle = await body.EvaluateAsync<string>("el => window.getComputedStyle(el).display");
+        Assert.That(displayStyle, Is.EqualTo("flex"), "Body should use flex display for sticky footer");
+    }
+}
+
+/// <summary>
 /// Accessibility and responsive layout tests.
 /// </summary>
 [TestFixture]

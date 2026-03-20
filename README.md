@@ -11,6 +11,7 @@
 | [`src/`](./src/README.md) | C# source code – agent orchestration, Document Intelligence integration, MCP validation, and the web frontend |
 | [`tests/`](./tests/) | Unit and integration tests for the API and web projects; includes Playwright end-to-end tests |
 | [`docs/`](./docs/README.md) | Architecture diagrams, design decisions, and setup guides |
+| [`scripts/`](./scripts/) | Environment setup scripts for Windows (PowerShell) and Linux/macOS (Bash) |
 | [`containers/`](./containers/README.md) | Dockerfiles for local and Azure container deployment |
 
 ---
@@ -76,6 +77,21 @@ This solution demonstrates a **multi-agent pattern** where several specialized A
 - An [Azure AI Document Intelligence](https://learn.microsoft.com/azure/ai-services/document-intelligence/quickstarts/get-started-sdks-rest-api) resource
 
 ### Configuration
+
+**Option 1: Automated Setup (Recommended)**
+
+Use the provided setup scripts to configure all environment variables interactively:
+
+```bash
+# Windows (PowerShell)
+.\scripts\setup-env.ps1
+
+# Linux / macOS
+chmod +x scripts/setup-env.sh
+./scripts/setup-env.sh
+```
+
+**Option 2: Manual Configuration**
 
 Update `src/DocAISLN/DocAI.Web/appsettings.json` or set environment variables:
 
@@ -187,6 +203,13 @@ The `tests/` folder contains three test projects:
 ---
 
 ## 📚 Key Resources
+
+### Project Documentation
+
+- 📖 [Environment Setup Guide](./docs/environment-setup.md) – Complete guide to configuring environment variables and Azure authentication
+- 🔗 [Model Context Protocol Integration](./docs/model-context-protocol.md) – How MCP is used for agent communication and validation
+- 🏗️ [Architecture Documentation](./docs/README.md) – System architecture, design decisions, and diagrams
+- 🐳 [Container Deployment Guide](./containers/README.md) – Docker and Azure Container Apps deployment instructions
 
 ### Azure Services
 

@@ -21,4 +21,8 @@
       </Content>
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\DocAI.Models\DocAI.Models.csproj" />
+    </ItemGroup>
+
 </Project>

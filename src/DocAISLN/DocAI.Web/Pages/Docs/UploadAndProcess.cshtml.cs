@@ -1,6 +1,7 @@
 ﻿using System.Text.Json;
 using DocAI.Models;
 using DocAI.Services.Data;
+using DocAI.Web.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -8,7 +9,8 @@ namespace DocAI.Web.Pages.Docs;
 
 public class UploadAndProcessPageModel(
     ILogger<UploadAndProcessPageModel> logger,
-    IDocumentProcessingService documentProcessingService) : PageModel
+    IDocumentProcessingService documentProcessingService,
+    ProcessDataService dataService) : PageModel
 {
     [BindProperty]
     public IFormFile? FormFile { get; set; }
@@ -60,7 +62,7 @@ public class UploadAndProcessPageModel(
             ErrorMessage = "Error uploading file. Please try again.";
         }
 
-        return RedirectToPage();
+        return RedirectToPage("/Docs/UploadAndProcess");
     }
 
     public async Task<IActionResult> OnPostProcessAsync(string fileName)
@@ -93,8 +95,10 @@ public class UploadAndProcessPageModel(
             var (data, validation) = await documentProcessingService.ProcessPdfAsync(filePath);
             
             // Store results in TempData
-            TempData["ProcessedData"] = JsonSerializer.Serialize(data);
-            TempData["ValidationResult"] = JsonSerializer.Serialize(validation);
+            var extractedData = JsonSerializer.Serialize(data);
+            var validationResult = JsonSerializer.Serialize(validation);
+            dataService.SaveProcessedData(extractedData, validationResult);
+            
             TempData["ProcessedFileName"] = fileName;
             TempData["SuccessMessage"] = $"Document '{fileName}' processed successfully!";
             
@@ -106,16 +110,15 @@ public class UploadAndProcessPageModel(
             TempData["ErrorMessage"] = $"Error processing '{fileName}': {ex.Message}";
         }
 
-        return RedirectToPage();
+        return RedirectToPage("/Docs/UploadAndProcess");
     }
 
     public IActionResult OnPostClearResults()
     {
-        TempData.Remove("ProcessedData");
-        TempData.Remove("ValidationResult");
+        dataService.Clear();
         TempData.Remove("ProcessedFileName");
         TempData["SuccessMessage"] = "Results cleared";
-        return RedirectToPage();
+        return RedirectToPage("/Docs/UploadAndProcess");
     }
 
     private void LoadUploadedFiles()
@@ -140,36 +143,14 @@ public class UploadAndProcessPageModel(
             ErrorMessage = TempData["ErrorMessage"]?.ToString();
         }
 
-        if (TempData.ContainsKey("ProcessedData"))
+        var (extractedData, validationResult) = dataService.GetFromMemory();
+        if (validationResult != null)
         {
-            try
-            {
-                var json = TempData["ProcessedData"]?.ToString();
-                if (!string.IsNullOrEmpty(json))
-                {
-                    ProcessedData = JsonSerializer.Deserialize<ExtractedData>(json);
-                }
-            }
-            catch (Exception ex)
-            {
-                logger.LogError(ex, "Error deserializing processed data");
-            }
+            ValidationResult = validationResult;
         }
-
-        if (TempData.ContainsKey("ValidationResult"))
+        if (extractedData != null)
         {
-            try
-            {
-                var json = TempData["ValidationResult"]?.ToString();
-                if (!string.IsNullOrEmpty(json))
-                {
-                    ValidationResult = JsonSerializer.Deserialize<ValidationResult>(json);
-                }
-            }
-            catch (Exception ex)
-            {
-                logger.LogError(ex, "Error deserializing validation result");
-            }
+            ProcessedData = extractedData;
         }
     }
 }

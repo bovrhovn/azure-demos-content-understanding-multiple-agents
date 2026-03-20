@@ -1,6 +1,7 @@
 ﻿using System.Text.Json;
 using DocAI.Models;
 using DocAI.Services.Data;
+using DocAI.Web.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -8,7 +9,8 @@ namespace DocAI.Web.Pages.Docs;
 
 public class UploadAndProcessWithADIPageModel(
     ILogger<UploadAndProcessWithADIPageModel> logger,
-    IAzureDocIntelligenceService azureDocIntelligenceService) : PageModel
+    IAzureDocIntelligenceService azureDocIntelligenceService,
+    ProcessDataService dataService) : PageModel
 {
     [BindProperty]
     public IFormFile? FormFile { get; set; }
@@ -92,7 +94,8 @@ public class UploadAndProcessWithADIPageModel(
             var data = await azureDocIntelligenceService.AnalyzeDocumentAsync(filePath);
             
             // Store results in TempData
-            TempData["ProcessedData"] = JsonSerializer.Serialize(data);
+            var processedData = JsonSerializer.Serialize(data);
+            dataService.SaveProcessedData(processedData,string.Empty);
             TempData["ProcessedFileName"] = fileName;
             TempData["SuccessMessage"] = $"Document '{fileName}' analyzed successfully with Azure Document Intelligence!";
             
@@ -109,7 +112,7 @@ public class UploadAndProcessWithADIPageModel(
 
     public IActionResult OnPostClearResults()
     {
-        TempData.Remove("ProcessedData");
+        dataService.Clear();
         TempData.Remove("ProcessedFileName");
         TempData["SuccessMessage"] = "Results cleared";
         return RedirectToPage();
@@ -137,20 +140,7 @@ public class UploadAndProcessWithADIPageModel(
             ErrorMessage = TempData["ErrorMessage"]?.ToString();
         }
 
-        if (TempData.ContainsKey("ProcessedData"))
-        {
-            try
-            {
-                var json = TempData["ProcessedData"]?.ToString();
-                if (!string.IsNullOrEmpty(json))
-                {
-                    ProcessedData = JsonSerializer.Deserialize<ExtractedData>(json);
-                }
-            }
-            catch (Exception ex)
-            {
-                logger.LogError(ex, "Error deserializing processed data");
-            }
-        }
+        var (extractedData, validationResult) = dataService.GetFromMemory();
+        ProcessedData = extractedData;
     }
 }

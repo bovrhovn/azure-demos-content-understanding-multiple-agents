@@ -2,6 +2,7 @@ using System.Net;
 using DocAI.Services.Data;
 using DocAI.Services.General;
 using DocAI.Services.Options;
+using DocAI.Web.Services;
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
@@ -22,29 +23,29 @@ builder.Services.Configure<ForwardedHeadersOptions>(options =>
     options.KnownIPNetworks.Clear();
     options.KnownProxies.Clear();
 });
-builder.Services.AddTransient<ILogger>(p =>
-{
-    var loggerFactory = p.GetRequiredService<ILoggerFactory>();
-    return loggerFactory.CreateLogger("frontend");
-});
-builder.Services.AddRazorPages().AddRazorPagesOptions(options =>
-    options.Conventions.AddPageRoute("/Info/Index", ""));
-// Register document processing services
 builder.Services.AddOptions<DocumentProcessingOptions>()
     .Bind(builder.Configuration.GetSection(DocumentProcessingOptions.SectionName))
     .ValidateDataAnnotations();
 builder.Services.AddOptions<AzureDocIntelligenceOptions>()
     .Bind(builder.Configuration.GetSection(AzureDocIntelligenceOptions.SectionName))
     .ValidateDataAnnotations();
+builder.Services.AddTransient<ILogger>(p =>
+{
+    var loggerFactory = p.GetRequiredService<ILoggerFactory>();
+    return loggerFactory.CreateLogger("frontend");
+});
 builder.Services.AddHealthChecks();
 builder.Services.AddMemoryCache();
+builder.Services.AddHttpContextAccessor();
 // Register PDF and storage services
 builder.Services.AddSingleton<PdfService>();
+builder.Services.AddSingleton<ProcessDataService>();
 builder.Services.AddSingleton<LocalStorageService>();
-
-
 builder.Services.AddScoped<IDocumentProcessingService, DocumentProcessingService>();
 builder.Services.AddScoped<IAzureDocIntelligenceService, AzureDocIntelligenceService>();
+
+builder.Services.AddRazorPages().AddRazorPagesOptions(options =>
+    options.Conventions.AddPageRoute("/Info/Index", ""));
 
 var app = builder.Build();
 

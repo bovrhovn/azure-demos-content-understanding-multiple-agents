@@ -8,8 +8,8 @@ using ValidationResult = DocAI.Models.ValidationResult;
 namespace DocAI.Services.Agents;
 
 public class ValidatorAgentWithMCP(
-    string mcpEndpoint,
-    IChatClient client,
+    string mcpEndpoint,//deployed mcp like https://hosturl/mcp - mcp endpoint registered as AddMcp
+    IChatClient client, //send client which can be used to call the MCP
     ILogger<ValidatorAgent> logger)
 {
     public async Task<ValidationResult> ValidateExtractedData(ExtractedData data)
@@ -21,6 +21,7 @@ public class ValidatorAgentWithMCP(
             ConnectionTimeout = TimeSpan.FromSeconds(30)
         });
 
+        // create mcp client to call tools
         await using var mcpClient = await McpClient.CreateAsync(transport);
         var tools = await mcpClient.ListToolsAsync();
         //here we can use also agent to call - but we are directly calling the tool
